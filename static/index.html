@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pre-processing Application</title>
+    <script>
+        let currentInputType = 'TEXT';
+
+        function updateSecondSetOptions() {
+            const inputType = document.querySelector('input[name="input_type"]:checked').value;
+            currentInputType = inputType;
+            const secondSet = document.getElementById('second_set');
+            secondSet.style.display = (inputType === 'TEXT') ? 'block' : 'none';
+        }
+
+        async function uploadFile() {
+            const inputType = document.querySelector('input[name="input_type"]:checked').value;
+            const fileInput = document.getElementById('file_input').files[0];
+            const formData = new FormData();
+            formData.append('input_type', inputType);
+            formData.append('file', fileInput);
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+
+            const displayBox = document.getElementById('display_box');
+            displayBox.innerHTML = ""; // Clear previous content
+
+            if (inputType === "IMAGE") {
+                const imgElement = document.createElement('img');
+                imgElement.src = result.content;
+                imgElement.alt = "Uploaded Image";
+                imgElement.style.maxWidth = "100%";
+                imgElement.style.border = "1px solid black";
+                displayBox.appendChild(imgElement);
+            } else {
+                displayBox.innerText = result.content || "File uploaded.";
+            }
+        }
+
+        async function preprocess() {
+            const inputText = document.getElementById('display_box').innerText;
+            const preProcessOption = document.querySelector('input[name="pre_process_option"]:checked').value;
+
+            const response = await fetch('/preprocess', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    input_type: currentInputType,
+                    input_text: inputText,
+                    pre_process_option: preProcessOption
+                })
+            });
+            const result = await response.json();
+            document.getElementById('output').innerText = result.output;
+        }
+    </script>
+</head>
+<body>
+    <h1>Pre-processing Application</h1>
+
+    <form onsubmit="event.preventDefault(); uploadFile();">
+        <label><input type="radio" name="input_type" value="TEXT" checked onchange="updateSecondSetOptions()"> TEXT</label>
+        <label><input type="radio" name="input_type" value="AUDIO" onchange="updateSecondSetOptions()"> AUDIO</label>
+        <label><input type="radio" name="input_type" value="IMAGE" onchange="updateSecondSetOptions()"> IMAGE</label>
+        <label><input type="radio" name="input_type" value="3D" onchange="updateSecondSetOptions()"> 3D</label>
+
+        <br><br>
+
+        <input type="file" id="file_input" accept=".txt, .wav, .mp3, .jpg, .jpeg, .png, .bmp, .obj">
+        <button type="submit">Upload</button>
+    </form>
+
+    <div id="display_box" style="border: 1px solid black; padding: 10px; margin-top: 20px; max-height: 400px; overflow-y: auto;"></div>
+
+    <div id="second_set" style="display: none;">
+        <label><input type="radio" name="pre_process_option" value="pre-process" checked> Pre-process</label>
+        <label><input type="radio" name="pre_process_option" value="tokenize"> Tokenize</label>
+        <label><input type="radio" name="pre_process_option" value="augment"> Augment</label>
+        <br><br>
+    </div>
+
+    <button onclick="preprocess()">Pre-process</button>
+
+    <h2>Output:</h2>
+    <div id="output" style="border: 1px solid black; padding: 10px;"></div>
+</body>
+</html>
