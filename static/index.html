@@ -4,6 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pre-processing Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            margin: 0;
+        }
+        h1 {
+            color: #333;
+            font-size: 1.5em;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        form, #second_set, #output {
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+        }
+        label {
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            font-size: 0.9em;
+            color: #555;
+        }
+        input[type="radio"] {
+            margin-right: 5px;
+        }
+        #file_input {
+            width: 100%;
+            padding: 6px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 0.9em;
+        }
+        .button {
+            width: 100%;
+            max-width: 100px;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button-upload {
+            background-color: #4CAF50;
+        }
+        .button-upload:hover {
+            background-color: #45a049;
+        }
+        .button-preprocess {
+            background-color: #007BFF;
+        }
+        .button-preprocess:hover {
+            background-color: #0069d9;
+        }
+        #display_box, #output {
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            font-size: 0.85em;
+        }
+        #output {
+            min-height: 200px;
+            font-size: 1em;
+        }
+        #second_set {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        #second_set label {
+            margin-right: 0;
+            font-size: 0.9em;
+        }
+    </style>
     <script>
         let currentInputType = 'TEXT';
 
@@ -11,7 +105,7 @@
             const inputType = document.querySelector('input[name="input_type"]:checked').value;
             currentInputType = inputType;
             const secondSet = document.getElementById('second_set');
-            secondSet.style.display = (inputType === 'TEXT') ? 'block' : 'none';
+            secondSet.style.display = (inputType === 'TEXT') ? 'flex' : 'none';
         }
 
         window.onload = function() {
@@ -41,6 +135,7 @@
                 imgElement.alt = "Uploaded Image";
                 imgElement.style.maxWidth = "100%";
                 imgElement.style.border = "1px solid black";
+                imgElement.style.borderRadius = "4px";
                 displayBox.appendChild(imgElement);
             } else {
                 displayBox.innerText = result.content || "File uploaded.";
@@ -76,24 +171,21 @@
         <label><input type="radio" name="input_type" value="IMAGE" onchange="updateSecondSetOptions()"> IMAGE</label>
         <label><input type="radio" name="input_type" value="3D" onchange="updateSecondSetOptions()"> 3D</label>
 
-        <br><br>
-
         <input type="file" id="file_input" accept=".txt, .wav, .mp3, .jpg, .jpeg, .png, .bmp, .obj">
-        <button type="submit">Upload</button>
+        <button type="submit" class="button button-upload">Upload</button>
     </form>
 
-    <div id="display_box" style="border: 1px solid black; padding: 10px; margin-top: 20px; max-height: 400px; overflow-y: auto;"></div>
+    <div id="display_box"></div>
 
     <div id="second_set">
         <label><input type="radio" name="pre_process_option" value="pre-process" checked> Pre-process</label>
         <label><input type="radio" name="pre_process_option" value="tokenize"> Tokenize</label>
         <label><input type="radio" name="pre_process_option" value="augment"> Augment</label>
-        <br><br>
     </div>
 
-    <button onclick="preprocess()">Pre-process</button>
+    <button onclick="preprocess()" class="button button-preprocess">Pre-process</button>
 
     <h2>Output:</h2>
-    <div id="output" style="border: 1px solid black; padding: 10px;"></div>
+    <div id="output"></div>
 </body>
 </html>
