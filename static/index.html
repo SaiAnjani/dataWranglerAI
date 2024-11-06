@@ -14,6 +14,11 @@
             secondSet.style.display = (inputType === 'TEXT') ? 'block' : 'none';
         }
 
+        window.onload = function() {
+            document.querySelector('input[name="input_type"][value="TEXT"]').checked = true;
+            updateSecondSetOptions();
+        }
+
         async function uploadFile() {
             const inputType = document.querySelector('input[name="input_type"]:checked').value;
             const fileInput = document.getElementById('file_input').files[0];
@@ -66,7 +71,7 @@
     <h1>Pre-processing Application</h1>
 
     <form onsubmit="event.preventDefault(); uploadFile();">
-        <label><input type="radio" name="input_type" value="TEXT" checked onchange="updateSecondSetOptions()"> TEXT</label>
+        <label><input type="radio" name="input_type" value="TEXT" onchange="updateSecondSetOptions()"> TEXT</label>
         <label><input type="radio" name="input_type" value="AUDIO" onchange="updateSecondSetOptions()"> AUDIO</label>
         <label><input type="radio" name="input_type" value="IMAGE" onchange="updateSecondSetOptions()"> IMAGE</label>
         <label><input type="radio" name="input_type" value="3D" onchange="updateSecondSetOptions()"> 3D</label>
@@ -79,7 +84,7 @@
 
     <div id="display_box" style="border: 1px solid black; padding: 10px; margin-top: 20px; max-height: 400px; overflow-y: auto;"></div>
 
-    <div id="second_set" style="display: none;">
+    <div id="second_set">
         <label><input type="radio" name="pre_process_option" value="pre-process" checked> Pre-process</label>
         <label><input type="radio" name="pre_process_option" value="tokenize"> Tokenize</label>
         <label><input type="radio" name="pre_process_option" value="augment"> Augment</label>
