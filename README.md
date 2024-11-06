@@ -39,3 +39,24 @@ This project consists of a FastAPI backend (`main.py`) and an HTML frontend (`in
    ```bash
    git clone https://github.com/yourusername/pre-processing-app.git
    cd pre-processing-app
+
+2. **Install dependencies**:
+  -It’s recommended to use a virtual environment.
+  ```bash
+  python -m venv env
+  source env/bin/activate  
+
+- Install required packages.
+  ```bash
+   pip install fastapi uvicorn
+
+3. **Running the Application**
+  ***Start the FastAPI server:***
+  ```bash
+  uvicorn main:app --reload
+***Access the Frontend***  
+     -Open the index.html file in your web browser (drag it to the browser or open via file:// URL).
+-The frontend connects to the backend API to handle file uploads and display pre-processed results.
+
+
+
